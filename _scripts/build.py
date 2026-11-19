@@ -17,12 +17,14 @@ import html as html_mod
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, '_data'))
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from tools_text import TEXT_TOOLS
 from tools_image import IMAGE_TOOLS
 from tools_calc import CALC_TOOLS
 from tools_gen import GENERATOR_TOOLS
 from tools_time_count import TIME_TOOLS, COUNTER_TOOLS
+from icons import icon, tool_icon, category_icon, icon as svg_icon
 
 TOOLS = TEXT_TOOLS + IMAGE_TOOLS + CALC_TOOLS + GENERATOR_TOOLS + TIME_TOOLS + COUNTER_TOOLS
 BY_SLUG = {t['slug']: t for t in TOOLS}
@@ -66,15 +68,22 @@ def esc(s):
 def attr_esc(s):
     return html_mod.escape(s, quote=True) if isinstance(s, str) else s
 
+def brand_mark(size=32):
+    """Distinct brand graphic: a blue rounded tile with a stylised 'C' made of
+    three stacked bars, suggesting calculation / tools. Pure SVG, no text font."""
+    return ('<svg class="logo-mark" width="%d" height="%d" viewBox="0 0 40 40" fill="none" '
+            'xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'
+            '<rect width="40" height="40" rx="11" fill="#2563eb"/>'
+            '<path d="M27 13.5a9 9 0 1 0 0 13" stroke="#fff" stroke-width="4.2" stroke-linecap="round"/>'
+            '<circle cx="27" cy="20" r="2.6" fill="#93c5fd"/>'
+            '</svg>' % (size, size))
+
 def icon_svg():
-    return ('<svg width="30" height="30" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'
-            '<rect width="40" height="40" rx="10" fill="#2563eb"/>'
-            '<text x="20" y="26" font-family="Arial,sans-serif" font-size="17" font-weight="800" fill="#fff" text-anchor="middle">CH</text></svg>')
+    return brand_mark(30)
 
 def logo_html(light=False):
-    cls = 'footer-logo' if light else ''
-    return ('<a class="logo" href="/" aria-label="CalcHub home">' + icon_svg() +
-            '<span>Calc<span>Hub</span></span></a>')
+    return ('<a class="logo" href="/" aria-label="CalcHub home">' + brand_mark(32) +
+            '<span class="logo-word">Calc<em>Hub</em></span></a>')
 
 def head_html(title, desc, canonical, extra_ld=None, noindex=False):
     ld = []
@@ -114,40 +123,41 @@ def header_html(active=''):
             + logo_html() +
             '<nav class="main-nav" aria-label="Main navigation"><ul>' + items + '</ul></nav>\n'
             '<div class="header-actions">\n'
-            '<a class="icon-btn" href="/search/" aria-label="Search tools" title="Search tools">'
-            '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></a>\n'
-            '<button class="menu-toggle" aria-expanded="false" aria-label="Toggle menu"><span></span><span></span><span></span></button>\n'
+            '<a class="header-search" href="/search/" aria-label="Search all tools">'
+            + svg_icon('search', 17) + '<span>Search tools</span><kbd>/</kbd></a>\n'
+            '<button class="menu-toggle" aria-expanded="false" aria-label="Toggle menu">'
+            + svg_icon('menu', 20) + '</button>\n'
             '</div>\n  </div>\n</header>\n')
 
 def footer_html(extra_scripts='', include_tools_js=True):
     cats = ''
     for c in CATEGORIES:
-        cats += '<a href="/category/' + c['slug'] + '/">' + c['name'] + '</a>'
+        cats += '<a href="/category/' + c['slug'] + '/">' + esc(c['name']) + '</a>'
     return ('<footer class="site-footer">\n  <div class="container">\n'
             '    <div class="footer-grid">\n'
             '      <div class="footer-brand">\n' + logo_html(light=True) +
-            '        <p>' + SITE_TAGLINE + '. Simple, fast and useful tools. No signup required. All tools run directly in your browser.</p>\n'
+            '        <p>Simple, fast and useful tools for work, creativity and everyday life. No signup, no setup — just tools that run in your browser.</p>\n'
             '      </div>\n'
             '      <div class="footer-col"><h4>Tools</h4>' + cats +
             '        <a href="/tools/">All Tools</a>\n      </div>\n'
             '      <div class="footer-col"><h4>Company</h4>\n'
-            '        <a href="/about/">About Us</a>\n'
+            '        <a href="/about/">About</a>\n'
             '        <a href="/contact/">Contact</a>\n'
-            '        <a href="/disclaimer/">Disclaimer</a>\n'
             '      </div>\n'
             '      <div class="footer-col"><h4>Legal</h4>\n'
             '        <a href="/privacy-policy/">Privacy Policy</a>\n'
             '        <a href="/terms/">Terms of Use</a>\n'
+            '        <a href="/disclaimer/">Disclaimer</a>\n'
             '      </div>\n'
             '    </div>\n'
             '    <div class="footer-bottom">\n'
             '      <span>&copy; <span data-year></span> ' + SITE_NAME + '. All rights reserved.</span>\n'
-            '      <span>Tools run locally in your browser — your data stays on your device.</span>\n'
+            '      <span>Free tools for everyday tasks. Your data stays on your device.</span>\n'
             '    </div>\n  </div>\n</footer>\n'
             + extra_scripts +
-            '<script src="/assets/js/main.js" defer></script>\n'
-            + ('<script src="/assets/js/tools.js" defer></script>\n' if include_tools_js else '') +
             '<script src="/assets/js/tools-data.js" defer></script>\n'
+            + ('<script src="/assets/js/tools.js" defer></script>\n' if include_tools_js else '') +
+            '<script src="/assets/js/main.js" defer></script>\n'
             '</body>\n</html>\n')
 
 def breadcrumb_html(items):
@@ -163,19 +173,21 @@ def breadcrumb_html(items):
 
 def tool_card(t, cat_name=None):
     return ('<a class="tool-card" href="/tools/' + t['slug'] + '/" data-search-item="'
-            + t['slug'] + ' ' + t['name'].lower() + '">'
-            '<span class="icon" aria-hidden="true">' + esc(t['icon']) + '</span>'
+            + t['slug'] + ' ' + t['name'].lower() + '" data-cat="' + t['cat'] + '">'
+            '<span class="tc-icon" aria-hidden="true">' + tool_icon(t['slug'], 22) + '</span>'
             '<h3>' + esc(t['name']) + '</h3>'
-            '<p>' + esc(t['lede'][:110]) + '</p>'
-            '<span class="go">Open tool →</span>'
+            '<p>' + esc(t['lede'][:118]) + '</p>'
+            '<span class="go">Open tool' + svg_icon('arrow-up-right', 15) + '</span>'
             '</a>')
 
-def cat_card(c, count):
-    return ('<a class="cat-card" href="/category/' + c['slug'] + '/">'
-            '<span class="cat-icon" aria-hidden="true">' + c['icon'] + '</span>'
+def cat_card(c, count, minor=False):
+    cls = 'cat-card minor' if minor else 'cat-card'
+    return ('<a class="' + cls + '" href="/category/' + c['slug'] + '">'
+            '<span class="cat-icon" aria-hidden="true">' + category_icon(c['cat'], 25) + '</span>'
             '<h3>' + esc(c['name']) + '</h3>'
             '<p>' + esc(c['desc']) + '</p>'
-            '<span class="cat-count">' + str(count) + ' tool' + ('s' if count != 1 else '') + '</span>'
+            '<span class="cat-foot"><span class="cat-count">' + str(count) + ' tool' + ('s' if count != 1 else '') + '</span>'
+            '<span class="cat-browse">Browse' + svg_icon('arrow-right', 15) + '</span></span>'
             '</a>')
 
 # ---------------- Widget HTML per tool ----------------
@@ -293,15 +305,16 @@ def widget_html(t):
 </div>''',
         'image-compressor': '''
 <div class="field">
-  <div class="dropzone" tabindex="0" role="button" aria-label="Upload image to compress">
+  <div class="dropzone" tabindex="0" role="button" aria-label="Upload an image to compress">
     <input type="file" accept="image/*">
-    <p><strong>Drop an image here</strong> or click to browse</p>
-    <p style="font-size:.85rem">JPG, PNG or WebP — processed locally, never uploaded</p>
+    <span class="dz-icon">' + svg_icon('image-compressor', 26) + '</span>
+    <strong>Drop your image here</strong>
+    <small>or <span style="color:var(--primary);font-weight:600">click to browse</span> · JPG, PNG or WebP</small>
   </div>
 </div>
 <div class="form-row">
   <div class="field">
-    <label for="ic-scale">Scale <span class="field-hint" data-scale-val>100%</span></label>
+    <label for="ic-scale">Resize <span class="field-hint" data-scale-val>80%</span></label>
     <input id="ic-scale" type="range" min="10" max="100" step="5" value="80" data-scale>
   </div>
   <div class="field">
@@ -310,14 +323,14 @@ def widget_html(t):
   </div>
 </div>
 <div class="status-msg"></div>
-<div style="margin-top:16px">
-  <img data-preview alt="Compressed image preview" style="max-width:100%;border:1px solid var(--border);border-radius:8px">
-  <p class="result-sub" data-info></p>
+<div class="preview-wrap" data-preview-wrap hidden>
+  <img data-preview alt="Compressed image preview">
+  <div class="preview-meta" data-info></div>
 </div>
 <div class="form-actions">
-  <button type="button" class="btn btn-primary" data-download>Download compressed JPG</button>
+  <button type="button" class="btn btn-primary" data-download disabled>' + svg_icon('download', 17) + 'Download compressed JPG</button>
 </div>
-<p class="result-sub" style="margin-top:8px">Output is re-encoded as JPEG. Transparent PNGs lose their alpha channel when compressed to JPEG.</p>''',
+<p class="result-sub" style="margin-top:14px">Output is re-encoded as JPEG. Transparent PNGs lose their alpha channel when compressed to JPEG. Your image never leaves this device.</p>''',
         'image-resizer': '''
 <div class="field">
   <div class="dropzone" tabindex="0" role="button" aria-label="Upload image to resize">
@@ -460,7 +473,7 @@ def widget_html(t):
     <option value="decrease">Percentage decrease (from X to Y)</option>
   </select>
 </div>
-<div class="form-row">
+<div class="form-row calc-inputs">
   <div class="field">
     <label for="pc-a" data-label-a>Percentage (X)</label>
     <input id="pc-a" type="number" step="any" value="15" data-a>
@@ -470,10 +483,14 @@ def widget_html(t):
     <input id="pc-b" type="number" step="any" value="240" data-b>
   </div>
 </div>
-<div class="result-card">
+<div class="result-card calc-result">
+  <div class="rc-label">Result</div>
   <div class="result-value" data-out1>—</div>
-  <div class="result-sub" data-out2>Enter values to calculate.</div>
-  <div class="result-sub" data-out3></div>
+  <div class="formula-line" data-out2>Enter values to calculate.</div>
+  <div class="formula-sub" data-out3></div>
+</div>
+<div class="form-actions">
+  <button type="button" class="btn btn-secondary" id="pc-reset">' + svg_icon('refresh', 16) + 'Reset values</button>
 </div>''',
         'age-calculator': '''
 <div class="form-row">
@@ -603,24 +620,33 @@ def widget_html(t):
 </div>''',
         'password-generator': '''
 <div class="field">
-  <label for="pg-len">Length <span class="field-hint" data-length-val>16</span></label>
+  <label for="pg-len">Password length <span class="field-hint"><span data-length-val>16</span> characters</span></label>
   <input id="pg-len" type="range" min="4" max="64" value="16" data-length>
 </div>
 <div class="field">
-  <label class="checkline"><input type="checkbox" data-upper checked> Uppercase (A–Z)</label>
-  <label class="checkline"><input type="checkbox" data-lower checked> Lowercase (a–z)</label>
-  <label class="checkline"><input type="checkbox" data-nums checked> Numbers (0–9)</label>
-  <label class="checkline"><input type="checkbox" data-syms checked> Symbols (!@#$…)</label>
+  <span class="field-label">Include characters</span>
+  <div class="pw-options">
+    <label class="checkline"><input type="checkbox" data-upper checked> Uppercase <span class="field-hint">A–Z</span></label>
+    <label class="checkline"><input type="checkbox" data-lower checked> Lowercase <span class="field-hint">a–z</span></label>
+    <label class="checkline"><input type="checkbox" data-nums checked> Numbers <span class="field-hint">0–9</span></label>
+    <label class="checkline"><input type="checkbox" data-syms checked> Symbols <span class="field-hint">!@#$…</span></label>
+  </div>
 </div>
 <div class="field">
   <label for="pg-output">Generated password</label>
-  <textarea id="pg-output" class="output-area resize-none" readonly spellcheck="false" data-output autocomplete="off" autocapitalize="off"></textarea>
+  <div class="pw-output-wrap">
+    <textarea id="pg-output" class="output-area resize-none" readonly spellcheck="false" data-output autocomplete="off" autocapitalize="off"></textarea>
+    <button type="button" class="pw-copy" data-copy aria-label="Copy password">' + svg_icon('copy', 18) + '</button>
+  </div>
 </div>
-<div class="result-sub" data-strength></div>
+<div class="pw-strength">
+  <div class="pw-meter" data-pw-meter><i></i><i></i><i></i><i></i></div>
+  <span data-strength></span>
+</div>
 <div class="form-actions">
-  <button type="button" class="btn btn-primary" data-generate>Generate new</button>
-  <button type="button" class="btn btn-secondary" data-copy>Copy password</button>
-</div>''',
+  <button type="button" class="btn btn-primary btn-lg" data-generate>' + svg_icon('refresh', 17) + 'Generate new password</button>
+</div>
+<p class="result-sub" style="margin-top:14px">Generated locally with your browser's secure random source. Your password is never stored or transmitted.</p>''',
         'qr-code-generator': '''
 <div class="field">
   <label for="qr-text">Text or URL</label>
@@ -858,15 +884,15 @@ def side_panel_html(t):
     for slug in t['related'][:5]:
         rt = BY_SLUG.get(slug)
         if rt:
-            related += '<li><a href="/tools/' + rt['slug'] + '/">' + esc(rt['name']) + '</a></li>'
+            related += ('<li><a href="/tools/' + rt['slug'] + '/">' + esc(rt['name']) +
+                        svg_icon('arrow-up-right', 15) + '</a></li>')
     count = len([x for x in TOOLS if x['cat'] == cat['cat']])
     return ('<aside class="side-panel">'
             '<div class="side-box"><h3>Related Tools</h3><ul>' + related + '</ul></div>'
-            '<div class="side-box"><h3>Category</h3><p style="font-size:.92rem;color:var(--text-secondary);margin-bottom:10px">' +
-            esc(cat['name']) + ' (' + str(count) + ' tool' + ('s' if count != 1 else '') + ')</p>'
-            '<a class="btn btn-secondary" href="/category/' + cat['slug'] + '/" style="width:100%">Browse category</a></div>'
-            '<div class="side-box"><h3>All Tools</h3><p style="font-size:.88rem;color:var(--text-secondary)">Browse every CalcHub tool.</p>'
-            '<a class="btn btn-secondary" href="/tools/" style="width:100%">All tools</a></div>'
+            '<div class="side-box"><h3>Category</h3><p>' + esc(cat['name']) + ' · ' + str(count) + ' tool' + ('s' if count != 1 else '') + '</p>'
+            '<a class="btn btn-secondary" href="/category/' + cat['slug'] + '/">' + svg_icon('arrow-right', 16) + 'Browse category</a></div>'
+            '<div class="side-box"><h3>Explore More</h3><p>Browse every free tool in the library.</p>'
+            '<a class="btn btn-secondary" href="/tools/">' + svg_icon('arrow-right', 16) + 'All tools</a></div>'
             '</aside>')
 
 def tool_ld(t, cat):
@@ -894,21 +920,84 @@ def tool_page(t):
     body = (header_html('/tools/') +
             '<main id="main" class="tool-page"><div class="container">' +
             crumbs +
-            '<div class="tool-page-head"><h1>' + esc(t['h1']) + '</h1>'
+            '<div class="tool-page-head">'
+            '<div class="th-title"><span class="th-icon" aria-hidden="true">' + tool_icon(t['slug'], 28) + '</span>'
+            '<h1>' + esc(t['h1']) + '</h1></div>'
             '<p class="lead">' + esc(t['lede']) + '</p></div>'
-            '<div class="tool-layout"><div>' +
-            '<div class="tool-card-ui">' + widget_html(t) + '</div>' +
-            prose_html(t) +
+            '<div class="tool-layout"><div>'
+            '<section class="tool-panel">'
+            '<div class="tool-panel-head"><span class="tp-title">' + esc(t['name']) + '</span>'
+            '<span class="tp-badge">' + svg_icon('shield', 14) + 'Runs in your browser</span></div>'
+            '<div class="tool-panel-body">' + widget_html(t) + '</div>'
+            '</section>'
+            '<div class="content-card">' + prose_html(t) + '</div>'
             '</div>' + side_panel_html(t) + '</div>'
             '</div></main>' + footer_html(extra_scripts_for(t)))
     return head_html(t['title'], t['desc'], canonical, tool_ld(t, cat)) + body
 
 # ---------------- Home ----------------
+def hero_visual_html():
+    """A composed UI snippet showing real tool types — no stock illustration."""
+    rows = ''
+    for slug, name, label in [
+        ('word-counter', 'Word Counter', '1,284 words'),
+        ('password-generator', 'Password Generator', 'Kx9#pL2@vN7'),
+        ('image-compressor', 'Image Compressor', '840 KB saved'),
+    ]:
+        rows += ('<div class="hv-row"><span class="sr-icon">' + tool_icon(slug, 18) + '</span>'
+                 '<span class="hv-lines"><b>' + name + '</b><i></i></span>'
+                 '<span class="result-sub" style="margin:0;white-space:nowrap">' + label + '</span></div>')
+    return (
+        '<div class="hero-visual" aria-hidden="true">'
+        '<div class="hv-window">'
+        '<div class="hv-bar"><i></i><i></i><i></i><span>toolhub / dashboard</span></div>'
+        '<div class="hv-body">'
+        '<div class="hv-tabs"><span class="on">Popular</span><span>Text</span><span>Images</span><span>Calculators</span><span>Generators</span></div>'
+        + rows +
+        '<div class="hv-result"><div><b>Result</b><strong>36.8% smaller</strong></div>' + svg_icon('check', 24) + '</div>'
+        '</div></div>'
+        '<div class="hv-float one">' + svg_icon('shield', 16) + 'Private by design</div>'
+        '<div class="hv-float two">' + svg_icon('bolt', 16) + 'Fast &amp; free</div>'
+        '</div>')
+
+def quick_search_html():
+    """Dropdown search backed by window.CalcHubData (all 30 tools, keyboard ready)."""
+    return (
+        '<div class="hero-search">'
+        '<div class="search-field">'
+        + svg_icon('search', 20) +
+        '<input id="home-search" type="text" placeholder="Search for a tool..." aria-label="Search all tools" '
+        'autocomplete="off" role="combobox" aria-expanded="false" aria-controls="home-results">'
+        '<button type="button" class="btn btn-primary" id="home-search-go">Search' + svg_icon('arrow-right', 16) + '</button>'
+        '</div>'
+        '<div class="search-results" id="home-results" role="listbox" aria-label="Tool results"></div>'
+        '</div>')
+
+def value_props_html():
+    items = [
+        ('shield', 'Private by Design', 'Your files and text are processed directly in your browser wherever supported. Nothing is uploaded.'),
+        ('bolt', 'Fast &amp; Simple', 'Open a tool and get things done without unnecessary steps, sign-ups or waiting.'),
+        ('gift', 'Free to Use', 'A growing collection of useful everyday tools, free for everyone and open to all.'),
+    ]
+    out = ''
+    for ic, title, text in items:
+        out += ('<div class="value-item"><span class="vi-icon">' + svg_icon(ic, 24) + '</span>'
+                '<div><h3>' + title + '</h3><p>' + text + '</p></div></div>')
+    return '<div class="value-grid">' + out + '</div>'
+
 def home_page():
     popular = [BY_SLUG[s] for s in POPULAR_SLUGS if s in BY_SLUG]
     popular_cards = ''.join(tool_card(t) for t in popular)
-    cat_cards = ''.join(cat_card(c, len([x for x in TOOLS if x['cat'] == c['cat']])) for c in CATEGORIES)
     all_cards = ''.join(tool_card(t) for t in sorted(TOOLS, key=lambda x: x['name'].lower()))
+    counts = {c['cat']: len([x for x in TOOLS if x['cat'] == c['cat']]) for c in CATEGORIES}
+    # Core four categories first; Counters given lower visual weight.
+    core = [c for c in CATEGORIES if c['cat'] in ('text', 'image', 'calc', 'gen')]
+    minor = [c for c in CATEGORIES if c['cat'] in ('time', 'count')]
+    cat_cards = ''.join(cat_card(c, counts[c['cat']]) for c in core)
+    cat_minor = ''.join(cat_card(c, counts[c['cat']], minor=True) for c in minor)
+
+    filter_tabs = '<button type="button" class="filter-tab active" data-filter="all">All Tools</button>'
+    filter_tabs += ''.join('<button type="button" class="filter-tab" data-filter="' + c['cat'] + '">' + esc(c['name']) + '</button>' for c in CATEGORIES)
 
     ld = [
         {'@context': 'https://schema.org', '@type': 'WebSite',
@@ -918,37 +1007,48 @@ def home_page():
     ]
     body = (header_html('/') +
             '<main id="main">'
+
             '<section class="hero"><div class="container hero-inner">'
-            '<h1>Free Tools for Everyday Tasks</h1>'
-            '<p>Simple, fast and useful tools. No signup required. Every tool runs in your browser — your text, files and numbers never leave your device.</p>'
-            '<div class="search-box">'
-            '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>'
-            '<input id="home-search" type="text" placeholder="Search 30 tools…" aria-label="Search tools">'
-            '<button type="button">Search</button></div>'
+            '<div class="hero-copy">'
+            '<span class="eyebrow">Free online tools</span>'
+            '<h1>Free Tools for <span class="accent">Everyday Tasks.</span></h1>'
+            '<p class="hero-sub">Simple, fast and useful tools for work, creativity and everyday life.</p>'
+            '<p class="hero-note">No signup. No complicated setup. <strong>Just useful tools that work.</strong></p>'
+            + quick_search_html() +
+            '</div>'
+            + hero_visual_html() +
             '</div></section>'
 
             '<section class="section"><div class="container">'
-            '<div class="section-head"><div><h2>Popular Tools</h2><p>The tools people reach for most.</p></div></div>'
-            '<div class="tool-grid" id="home-tool-list">' + popular_cards + '</div>'
+            '<div class="section-head"><div><h2>Popular Tools</h2><p>The tools people reach for most.</p></div>'
+            '<a class="head-link" href="/tools/">View all tools' + svg_icon('arrow-right', 16) + '</a></div>'
+            '<div class="tool-grid">' + popular_cards + '</div>'
             '</div></section>'
 
-            '<section class="section" style="background:var(--bg-alt)"><div class="container">'
-            '<div class="section-head"><div><h2>Tool Categories</h2><p>Six collections that cover everyday tasks.</p></div></div>'
+            '<section class="section soft"><div class="container">'
+            '<div class="section-head"><div><h2>Tool Categories</h2><p>Six collections that cover everyday tasks. Pick one to explore.</p></div></div>'
             '<div class="cat-grid">' + cat_cards + '</div>'
+            '<div class="cat-grid" style="margin-top:20px;grid-template-columns:repeat(2,minmax(0,1fr))">' + cat_minor + '</div>'
             '</div></section>'
 
-            '<section class="section"><div class="container">'
-            '<div class="section-head"><div><h2>All Tools</h2><p>Every CalcHub tool, ready to use.</p></div></div>'
-            '<div class="tool-grid">' + all_cards + '</div>'
+            '<section class="section"><div class="container" id="all-tools">'
+            '<div class="section-head"><div><h2>All Tools</h2><p>Every CalcHub tool, ready to use. Filter by category or search by name.</p></div></div>'
+            '<div class="filter-bar"><div class="filter-tabs">' + filter_tabs + '</div>'
+            '<span class="filter-count" id="all-tools-count">' + str(len(TOOLS)) + ' tools</span></div>'
+            '<div class="tool-grid" id="home-tool-list">' + all_cards + '</div>'
+            '<div class="filter-empty" id="all-tools-empty"><strong>No tools found</strong>Try a different search or category.</div>'
             '</div></section>'
 
-            '<section class="section" style="background:var(--bg-alt)"><div class="container" style="max-width:760px">'
-            '<div class="prose" style="max-width:none">'
-            '<h2 style="margin-top:0">Why CalcHub?</h2>'
-            '<p>CalcHub is a collection of free online tools for everyday tasks — writing, images, calculations, generators, time management and counting. Everything is built as a lightweight static site: no accounts, no plugins, no waiting, no uploads.</p>'
-            '<p>Because tools run directly in your browser, your content stays private and the pages stay fast. We keep the interface simple and the descriptions honest. Where a tool involves an estimate — reading time, BMI, approximate month counts — we say so on the page.</p>'
-            '<p><a href="/about/">Learn more about CalcHub</a> or <a href="/tools/">browse all tools</a>.</p>'
-            '</div></div></section>'
+            '<section class="section soft"><div class="container">'
+            '<div class="why-intro"><h2>Why CalcHub?</h2><p>A lightweight tool collection built around privacy, speed and simplicity.</p></div>'
+            + value_props_html() +
+            '<div class="why-links"><a href="/about/">Learn more about CalcHub</a> &nbsp;·&nbsp; <a href="/tools/">Browse all tools</a></div>'
+            '</div></section>'
+
+            '<section class="cta-band"><div class="container"><div class="cta-inner">'
+            '<div><h2>Ready to get something done?</h2><p>Pick a tool and start in seconds — no account, no downloads, no waiting.</p></div>'
+            '<a class="btn btn-lg btn-primary" href="/tools/">Explore all ' + str(len(TOOLS)) + ' tools' + svg_icon('arrow-right', 17) + '</a>'
+            '</div></section>'
             '</main>' + footer_html(include_tools_js=False))
     return head_html(SITE_NAME + ' — ' + SITE_TAGLINE,
                      'Free online tools for everyday tasks: word counters, image tools, calculators, generators, timers and more. No signup required — everything runs in your browser.',
@@ -969,9 +1069,8 @@ def tools_directory_html():
             '<nav aria-label="Breadcrumb"><ol class="breadcrumb"><li><a href="/">Home</a></li><li aria-current="page">Tools</li></ol></nav>'
             '<h1>All CalcHub Tools</h1>'
             '<p class="lead">Browse all 30 free online tools. Every tool runs locally in your browser with no signup required.</p>'
-            '<div class="search-box" style="margin-top:20px">'
-            '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>'
-            '<input id="category-search" type="text" placeholder="Filter tools by name…" aria-label="Filter tools">'
+            '<div class="search-field" style="margin-top:24px;max-width:560px">' + svg_icon('search', 19) +
+            '<input id="category-search" type="text" placeholder="Filter all tools by name..." aria-label="Filter tools">'
             '</div>'
             '</div></section>'
             '<div id="category-tool-list"><p class="result-sub search-count" style="margin-bottom:16px">30 tools</p>' + cat_sections + '</div>'
@@ -994,11 +1093,14 @@ def category_page(c):
             + breadcrumb_html([('Home', '/'), ('Tools', '/tools/'), (c['name'], None)]) +
             '<h1>' + esc(c['name']) + '</h1>'
             '<p class="lead">' + esc(c['desc']) + '</p>'
-            '<div class="search-box" style="margin-top:20px">'
-            '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>'
-            '<input id="category-search" type="text" placeholder="Filter tools…" aria-label="Filter tools">'
+            '<div class="search-field" style="margin-top:24px;max-width:520px">' + svg_icon('search', 19) +
+            '<input id="category-search" type="text" placeholder="Filter tools in this category..." aria-label="Filter tools">'
             '</div></div></section>'
-            '<section class="section"><div class="container"><div class="tool-grid" id="category-tool-list">' + cards + '</div></div></section>'
+            '<section class="section"><div class="container">'
+            '<p class="result-sub search-count" style="margin-bottom:18px">' + str(len(tools)) + ' tool' + ('s' if len(tools) != 1 else '') + '</p>'
+            '<div class="tool-grid" id="category-tool-list">' + cards + '</div>'
+            '<div class="filter-empty" id="category-empty"><strong>No tools found</strong>Try a different keyword.</div>'
+            '</div></section>'
             '</main>' + footer_html(include_tools_js=False))
     return head_html(c['name'] + ' – Free Online Tools | CalcHub',
                      c['desc'] + ' All tools are free, run in your browser and need no signup.',
@@ -1015,15 +1117,14 @@ def search_page():
             '<main id="main"><section class="page-hero"><div class="container">'
             '<h1>Search Tools</h1>'
             '<p class="lead">Find the free online tool you need. Search by name or keyword.</p>'
-            '<div class="search-box" style="margin-top:20px">'
-            '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>'
-            '<input id="page-search" type="text" placeholder="e.g. password, image, timer…" aria-label="Search tools">'
+            '<div class="search-field" style="margin-top:24px;max-width:560px">' + svg_icon('search', 19) +
+            '<input id="page-search" type="text" placeholder="e.g. password, image, timer..." aria-label="Search tools">'
             '</div></div></section>'
             '<section class="section"><div class="container">'
-            '<p class="result-sub search-count" style="margin-bottom:16px">30 tools</p>'
+            '<p class="result-sub search-count" style="margin-bottom:18px">' + str(len(TOOLS)) + ' tools</p>'
             '<div class="tool-grid" id="page-tool-list">' +
             ''.join(tool_card(t) for t in sorted(TOOLS, key=lambda x: x['name'].lower())) +
-            '<p class="search-empty" style="display:none;grid-column:1/-1;color:var(--text-muted)">No tools match that search.</p>'
+            '<p class="search-empty" style="display:none;grid-column:1/-1;color:var(--muted);text-align:center;padding:48px 0"><strong style="color:var(--ink-2);display:block;font-size:1.05rem;margin-bottom:4px">No tools found</strong>Try a different keyword.</p>'
             '</div></div></section></main>' + footer_html(include_tools_js=False))
     return head_html('Search Tools | CalcHub',
                      'Search all CalcHub free online tools by name or keyword. Every tool is free and runs in your browser.',
@@ -1147,8 +1248,9 @@ def robots_txt():
 
 def favicon_svg():
     return ('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">'
-            '<rect width="64" height="64" rx="14" fill="#2563eb"/>'
-            '<text x="32" y="42" font-family="Arial,Helvetica,sans-serif" font-size="28" font-weight="800" fill="#ffffff" text-anchor="middle">CH</text></svg>\n')
+            '<rect width="64" height="64" rx="15" fill="#2563eb"/>'
+            '<path d="M44 21a14 14 0 1 0 0 22" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round"/>'
+            '<circle cx="44" cy="32" r="4" fill="#93c5fd"/></svg>\n')
 
 # ---------------- Writer ----------------
 def ensure_dirs():
@@ -1156,11 +1258,46 @@ def ensure_dirs():
     for d in dirs:
         os.makedirs(d, exist_ok=True)
 
+import re as _re
+
+# Single source of truth for link resolution on GitHub Pages project sites.
+# HTML static links and JS-generated links share the SAME prefix, computed once
+# per page in _localize_paths (relative form), which works for both the
+# /calchub/ subpath deployment and local file:// preview. Keep this constant in
+# sync with the deployment subpath; it is documentation/validation only — the
+# runtime prefix is injected as <meta name="calchub-base"> below.
+BASE_PATH = '/calchub/'
+
+def _localize_paths(rel, content):
+    """Convert site-root paths (/assets/..., /tools/...) into paths relative
+    to the current page, so GitHub Pages subpath (/calchub/) and local file
+    preview both work. Full URLs (canonical/og/JSON-LD) are untouched because
+    they never start with a bare '/'. tools-data.js and SEO text files skip.
+
+    The same `prefix` is injected as <meta name="calchub-base"> so that JS
+    dynamic links (search dropdown, search submit) resolve against exactly the
+    same base as the static HTML links — no second pathname-derived mechanism."""
+    if not rel.endswith('.html'):
+        return content
+    depth = rel.count('/')  # e.g. index.html=0, tools/x/index.html=2
+    prefix = '../' * depth
+    # Inject the unified base token once, before any HTML link rewriting.
+    if '<head>' in content and 'name="calchub-base"' not in content:
+        content = content.replace('<head>',
+                                  '<head>\n<meta name="calchub-base" content="' + prefix + '">',
+                                  1)
+    def repl(m):
+        attr, path = m.group(1), m.group(2)
+        if path.startswith('/'):
+            return '%s="%s%s"' % (attr, prefix, path[1:])
+        return m.group(0)
+    return _re.sub(r'(href|src)="(/[^"]*)"', repl, content)
+
 def write(rel, content):
     path = os.path.join(ROOT, rel)
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, 'w', encoding='utf-8') as f:
-        f.write(content)
+        f.write(_localize_paths(rel, content))
     print('wrote', rel)
 
 def build():

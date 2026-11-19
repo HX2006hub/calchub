@@ -299,6 +299,7 @@
     var scaleVal = $('[data-scale-val]', root);
     var qualityVal = $('[data-quality-val]', root);
     var preview = $('[data-preview]', root);
+    var previewWrap = $('[data-preview-wrap]', root);
     var info = $('[data-info]', root);
     var status = $('.status-msg', root);
     var downloadBtn = $('[data-download]', root);
@@ -337,12 +338,14 @@
         preview.src = URL.createObjectURL(blob);
         var saved = before - blob.size;
         var pct = before > 0 ? Math.round((saved / before) * 100) : 0;
-        info.innerHTML = 'Original: ' + fmtNum(before / 1024, 1) + ' KB &nbsp;•&nbsp; Output: <strong>' + fmtNum(blob.size / 1024, 1) + ' KB</strong> &nbsp;•&nbsp; ' + targetW + ' × ' + targetH + ' px';
+        if (previewWrap) previewWrap.hidden = false;
+        if (downloadBtn) downloadBtn.disabled = false;
+        info.innerHTML = '<span><b>Original</b> ' + fmtNum(before / 1024, 1) + ' KB</span><span><b>Output</b> ' + fmtNum(blob.size / 1024, 1) + ' KB</span><span><b>Dimensions</b> ' + targetW + ' × ' + targetH + ' px</span>';
         if (before > 0 && saved <= 0) {
-          info.innerHTML += '<br><strong style="color:var(--error)">Output is ' + fmtNum((blob.size - before) / 1024, 1) + ' KB larger than the original — not compressed. Try a lower quality or scale.</strong>';
+          info.innerHTML += '<span style="color:var(--error)"><b>Result</b> ' + fmtNum((blob.size - before) / 1024, 1) + ' KB larger — not compressed</span>';
           setStatus('Output is larger than the original. This image may not benefit from JPEG re-encoding.', 'err');
         } else {
-          info.innerHTML += '<br><span style="color:var(--success)">' + (pct > 0 ? pct + '% smaller than original.' : 'Same size as original.') + '</span>';
+          info.innerHTML += '<span style="color:var(--success)"><b>Result</b> ' + (pct > 0 ? pct + '% smaller than original' : 'Same size as original') + '</span>';
           setStatus('Compressed image ready. Check the preview, then download.', 'ok');
         }
       });
@@ -631,6 +634,10 @@
     mode.addEventListener('change', update);
     a.addEventListener('input', update);
     b.addEventListener('input', update);
+    var resetBtn = root.querySelector('#pc-reset');
+    if (resetBtn) resetBtn.addEventListener('click', function () {
+      mode.value = 'percent-of'; a.value = '15'; b.value = '240'; update();
+    });
     update();
   };
 
@@ -830,6 +837,7 @@
     var len = $('[data-length]', root), lenVal = $('[data-length-val]', root);
     var upper = $('[data-upper]', root), lower = $('[data-lower]', root), nums = $('[data-nums]', root), syms = $('[data-syms]', root);
     var output = $('[data-output]', root), strength = $('[data-strength]', root);
+    var meter = $('[data-pw-meter]', root);
     var SYMBOLS = '!@#$%^&*()_+-=[]{}|;:,.<>?';
     var UPPER = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', LOWER = 'abcdefghijklmnopqrstuvwxyz', NUMS = '0123456789';
     function entropyEstimate() {
@@ -867,8 +875,15 @@
       }
       output.value = chars.join('');
       var bits = entropyEstimate();
-      var label = bits < 45 ? 'Weak' : (bits < 70 ? 'Fair' : (bits < 100 ? 'Strong' : 'Very strong'));
-      strength.textContent = 'Estimated entropy: ~' + bits + ' bits • ' + label;
+      var level = bits < 45 ? 1 : (bits < 70 ? 2 : (bits < 100 ? 3 : 4));
+      var label = ['', 'Weak', 'Fair', 'Strong', 'Very strong'][level];
+      strength.textContent = label + ' · ~' + bits + ' bits';
+      if (meter) {
+        var segs = meter.querySelectorAll('i');
+        for (var s = 0; s < segs.length; s++) {
+          segs[s].className = s < level ? 'on' + level : '';
+        }
+      }
     }
     len.addEventListener('input', function () { lenVal.textContent = len.value; generate(); });
     [upper, lower, nums, syms].forEach(function (c) { c.addEventListener('change', generate); });
@@ -1330,8 +1345,8 @@
   /* =========================================================
      Mount
      ========================================================= */
-  document.addEventListener('DOMContentLoaded', function () {
-    $$('[data-tool]').forEach(function (el) {
+  function mountTools() {
+    $$('[data-tool]', document).forEach(function (el) {
       var name = el.getAttribute('data-tool');
       if (RUNNERS[name]) {
         try { RUNNERS[name](el); }
@@ -1340,5 +1355,12 @@
         }
       }
     });
-  });
+  }
+  // Scripts are deferred, so DOMContentLoaded may already have fired by the
+  // time this runs. Handle both states so runners always mount.
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', mountTools);
+  } else {
+    mountTools();
+  }
 })();
