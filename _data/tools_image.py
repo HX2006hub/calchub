@@ -186,30 +186,30 @@ IMAGE_TOOLS = [
         "popular": False,
         "icon": "Fg",
         "title": "Favicon Generator – Create Favicon Images Free | CalcHub",
-        "desc": "Generate favicon PNGs in common sizes from any image. Free online favicon generator with 16, 32, 48, 64 and 128 px outputs.",
+        "desc": "Generate a favicon PNG from an image or a letter. Choose 32, 48, 64 or 128 px and download the result — all locally in your browser.",
         "h1": "Favicon Generator",
-        "lede": "Turn any square image into browser favicons in the standard sizes. Export PNG icons at 16, 32, 48, 64 and 128 pixels, ready to drop into your website.",
+        "lede": "Turn an image or a single letter into a browser favicon. Pick one of the standard sizes (32, 48, 64 or 128 px), preview it and download a PNG — ready to drop into your website.",
         "howto": [
-            "Upload a square image (PNG or JPG).",
-            "Preview the resized favicon sizes.",
-            "Download the full set as individual PNG files."
+            "Drop an image, or type a letter and choose your colours.",
+            "Pick an output size: 32, 48, 64 or 128 px.",
+            "Preview the result, then download it as a PNG."
         ],
         "examples": [
-            "Generate a 16×16 and 32×32 favicon for your domain.",
-            "Create a 192×192 icon for Android home screens.",
-            "Prepare a 512×512 app icon base from a logo."
+            "Make a 32×32 favicon for a browser tab.",
+            "Create a 64×64 PNG icon from a company letter.",
+            "Prepare a 128×128 icon base from a square logo."
         ],
         "features": [
-            "Exports 16, 32, 48, 64 and 128 px PNG favicons",
-            "Preview of each size",
-            "Square crop automatic",
-            "Local browser processing"
+            "Choose from 32, 48, 64 and 128 px PNG sizes",
+            "Live preview before download",
+            "Square crop from any source image",
+            "Local browser processing — no upload"
         ],
         "privacy": "Your logo is processed locally in your browser and is never uploaded to a server.",
         "faq": [
             {"q": "Do you generate .ico files?", "a": "We generate PNG favicons in standard sizes, which work in all modern browsers. We do not fake .ico files by renaming PNGs, because that produces unusable icons."},
-            {"q": "Which favicon size is most important?", "a": "32×32 (browser tab) and 16×16 (fallback) are the most important for desktop browsers. 192 and 512 px are used by mobile home screens."},
-            {"q": "Does the source need to be square?", "a": "We crop the source to a square automatically, focusing on the centre, so a non-square logo will still work — check the preview."}
+            {"q": "Which favicon size should I choose?", "a": "32×32 is the most common size for a browser tab. Use 48×48 or 64×64 for higher-density displays, and 128×128 if you need a larger source to scale down elsewhere. This tool exports one size at a time as a PNG."},
+            {"q": "Does the source need to be square?", "a": "The image is fitted into a square canvas with a solid background, so a non-square logo will still work — check the preview before downloading."}
         ],
         "related": ["image-resizer", "image-compressor", "png-to-webp", "jpg-to-png"]
     },

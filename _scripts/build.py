@@ -31,7 +31,11 @@ BY_SLUG = {t['slug']: t for t in TOOLS}
 SITE_URL = 'https://calchub.tools'           # canonical origin (PENDING)
 SITE_NAME = 'CalcHub'
 SITE_TAGLINE = 'Free Tools for Everyday Tasks'
-CONTACT_EMAIL = 'hello@calchub.tools'        # placeholder inbox (PENDING)
+# No contact address is published: the site owner has not supplied a real,
+# monitored inbox. The Contact page explains how to reach us instead of
+# inventing an address (see policy_pages()). Set this only when a verified
+# inbox exists.
+CONTACT_EMAIL = ''
 
 CATEGORIES = [
     {'slug': 'text-tools',     'cat': 'text',  'name': 'Text Tools',            'icon': '✎', 'desc': 'Word counters, character counters, case converters, duplicate-line remover and lorem ipsum generator.'},
@@ -115,7 +119,7 @@ def header_html(active=''):
             '<button class="menu-toggle" aria-expanded="false" aria-label="Toggle menu"><span></span><span></span><span></span></button>\n'
             '</div>\n  </div>\n</header>\n')
 
-def footer_html(extra_scripts=''):
+def footer_html(extra_scripts='', include_tools_js=True):
     cats = ''
     for c in CATEGORIES:
         cats += '<a href="/category/' + c['slug'] + '/">' + c['name'] + '</a>'
@@ -142,7 +146,7 @@ def footer_html(extra_scripts=''):
             '    </div>\n  </div>\n</footer>\n'
             + extra_scripts +
             '<script src="/assets/js/main.js" defer></script>\n'
-            '<script src="/assets/js/tools.js" defer></script>\n'
+            + ('<script src="/assets/js/tools.js" defer></script>\n' if include_tools_js else '') +
             '<script src="/assets/js/tools-data.js" defer></script>\n'
             '</body>\n</html>\n')
 
@@ -945,7 +949,7 @@ def home_page():
             '<p>Because tools run directly in your browser, your content stays private and the pages stay fast. We keep the interface simple and the descriptions honest. Where a tool involves an estimate — reading time, BMI, approximate month counts — we say so on the page.</p>'
             '<p><a href="/about/">Learn more about CalcHub</a> or <a href="/tools/">browse all tools</a>.</p>'
             '</div></div></section>'
-            '</main>' + footer_html())
+            '</main>' + footer_html(include_tools_js=False))
     return head_html(SITE_NAME + ' — ' + SITE_TAGLINE,
                      'Free online tools for everyday tasks: word counters, image tools, calculators, generators, timers and more. No signup required — everything runs in your browser.',
                      SITE_URL + '/', ld) + body
@@ -971,7 +975,7 @@ def tools_directory_html():
             '</div>'
             '</div></section>'
             '<div id="category-tool-list"><p class="result-sub search-count" style="margin-bottom:16px">30 tools</p>' + cat_sections + '</div>'
-            '</main>' + footer_html())
+            '</main>' + footer_html(include_tools_js=False))
     return head_html('All Free Online Tools | CalcHub',
                      'Browse all 30 free online tools from CalcHub: text tools, image tools, calculators, generators, timers and counters. No signup, all in-browser.',
                      SITE_URL + '/tools/', [
@@ -995,7 +999,7 @@ def category_page(c):
             '<input id="category-search" type="text" placeholder="Filter tools…" aria-label="Filter tools">'
             '</div></div></section>'
             '<section class="section"><div class="container"><div class="tool-grid" id="category-tool-list">' + cards + '</div></div></section>'
-            '</main>' + footer_html())
+            '</main>' + footer_html(include_tools_js=False))
     return head_html(c['name'] + ' – Free Online Tools | CalcHub',
                      c['desc'] + ' All tools are free, run in your browser and need no signup.',
                      canonical, [
@@ -1020,7 +1024,7 @@ def search_page():
             '<div class="tool-grid" id="page-tool-list">' +
             ''.join(tool_card(t) for t in sorted(TOOLS, key=lambda x: x['name'].lower())) +
             '<p class="search-empty" style="display:none;grid-column:1/-1;color:var(--text-muted)">No tools match that search.</p>'
-            '</div></div></section></main>' + footer_html())
+            '</div></div></section></main>' + footer_html(include_tools_js=False))
     return head_html('Search Tools | CalcHub',
                      'Search all CalcHub free online tools by name or keyword. Every tool is free and runs in your browser.',
                      SITE_URL + '/search/', None) + body
@@ -1034,7 +1038,7 @@ def not_found_page():
             '<p>The page you are looking for does not exist or has moved. Try searching for a tool instead.</p>'
             '<a class="btn btn-primary" href="/">Back to home</a> '
             '<a class="btn btn-secondary" href="/tools/">Browse all tools</a>'
-            '</div></main>' + footer_html())
+            '</div></main>' + footer_html(include_tools_js=False))
     return head_html('Page Not Found (404) | CalcHub',
                      'The page you requested could not be found. Browse CalcHub free online tools instead.',
                      SITE_URL + '/404.html', None, noindex=True) + body
@@ -1051,7 +1055,7 @@ def legal_page(slug, title, desc, updated, sections):
             '<p class="lead">' + esc(desc) + '</p>'
             '<p class="updated">Last updated: ' + updated + '</p>'
             '</div></section>'
-            '<section class="section"><div class="container legal-page">' + h2 + '</div></section></main>' + footer_html())
+            '<section class="section"><div class="container legal-page">' + h2 + '</div></section></main>' + footer_html(include_tools_js=False))
     return head_html(title + ' | CalcHub', desc, SITE_URL + '/' + slug + '/', None) + body
 
 def policy_pages():
@@ -1068,9 +1072,10 @@ def policy_pages():
 
     # Contact
     contact_secs = [
-        ('Get in touch', '<p>We welcome feedback, bug reports and tool suggestions. The simplest way to reach us is email.</p>'
-         '<p><strong>Email:</strong> <a href="mailto:' + CONTACT_EMAIL + '">' + CONTACT_EMAIL + '</a></p>'
-         '<p>We aim to respond to genuine enquiries within a few business days. Please do not send sensitive personal data by email.</p>'),
+        ('Get in touch', '<p>We welcome feedback, bug reports and tool suggestions.</p>'
+         + ('<p><strong>Email:</strong> <a href="mailto:' + CONTACT_EMAIL + '">' + CONTACT_EMAIL + '</a></p>' if CONTACT_EMAIL else
+            '<p>This site is maintained by a small independent team. We do not publish a contact address here because no monitored inbox has been confirmed yet. If you are viewing this site through a hosted preview or repository, use that platform\u2019s issue tracker or feedback channel to reach the maintainers.</p>')
+         + '<p>Please do not send sensitive personal data through any channel.</p>'),
         ('What to include', '<ul><li>Which tool or page you are writing about.</li><li>What you expected to happen.</li><li>What actually happened.</li><li>Your browser and device (if relevant).</li></ul>'),
         ('Response times', '<p>This is a small independent project. We cannot guarantee a response to every message, but we read everything and prioritise issues that affect many users.</p>'),
     ]
@@ -1079,11 +1084,11 @@ def policy_pages():
     # Privacy
     privacy_secs = [
         ('Introduction', '<p>This Privacy Policy explains how ' + SITE_NAME + ' handles information when you visit and use our website. We designed the site to minimise data collection: the tools themselves process your content in your browser and do not send it to our servers.</p>'),
-        ('Information we collect', '<p>We operate a static website with no user accounts and no database of visitors. We do not require you to provide a name, email address or any personal details to use any tool.</p><p>Depending on how the site is hosted and connected to third-party services, standard technical data may be collected automatically — for example your IP address, browser type, referring page, and pages visited. This data is used by hosting providers and analytics services to operate and improve the site, and is generally retained according to those providers\u2019 policies.</p>'),
-        ('Cookies', '<p>We do not set advertising cookies ourselves. Some tools use your browser\u2019s local storage only if you explicitly enable a "keep count" option. That data stays on your device.</p><p>If we later enable Google AdSense, Google may use cookies (including DoubleClick cookies) to serve and personalise ads. We would clearly update this policy, and where required, ask for consent before personalised advertising. You can control or disable cookies in your browser settings.</p>'),
-        ('Analytics', '<p>If the site uses an analytics service such as Google Analytics or privacy-friendly alternatives (for example Cloudflare Web Analytics), it may process aggregate, privacy-preserving data about visits. We do not combine this with personal identifiers, and we do not log the content you type into tools.</p>'),
+        ('Information we collect', '<p>We operate a static website with no user accounts and no database of visitors. We do not require you to provide a name, email address or any personal details to use any tool.</p><p>CalcHub itself does not collect or store visitor information. Your hosting provider may record standard technical data such as IP address and browser type as part of serving the pages; that is handled under the host\u2019s own policy, not by CalcHub.</p>'),
+        ('Cookies', '<p>We do not set cookies and we do not run advertising. The only browser storage we use is localStorage in the counter tools, and only if you tick the optional "Keep count after refresh" checkbox. That number stays on your device; unticking or clearing site data removes it.</p>'),
+        ('Analytics', '<p>We do not use Google Analytics, Cloudflare Analytics, or any other analytics service. We do not run advertising pixels or trackers, and we never log the content you type into a tool.</p>'),
         ('Local processing of tool data', '<p>All tool processing happens in your browser using standard Web APIs such as Canvas, File, Blob, Clipboard, Web Crypto and Intl. Your text, uploaded images and calculated values are not uploaded to our server, are not stored by us, and disappear when you close the page.</p>'),
-        ('Third-party services', '<p>Our pages may load resources from third-party providers for core functions (such as hosting, fonts or analytics). These providers process only the minimal technical data needed to deliver those resources, under their own privacy policies.</p>'),
+        ('Third-party services', '<p>We do not load third-party fonts, analytics or advertising scripts. The only bundled third-party code is the open-source QR Code generator library, which is served from this site itself and runs locally in your browser. Your hosting provider delivers the static pages under its own privacy policy.</p>'),
         ('Data security', '<p>Because we do not collect or store tool inputs, there is little personal data for us to protect. Standard security measures (HTTPS, updated dependencies) are used to keep the site itself safe.</p>'),
         ('Your rights', '<p>Depending on your location (for example, under the GDPR or CCPA), you may have rights to access, correct or delete personal data. Since we do not collect tool inputs or account data, there is generally nothing to access or delete. To raise a privacy question, contact us via the <a href="/contact/">Contact</a> page.</p>'),
         ('Changes to this policy', '<p>We may update this policy when the site or law changes. The "Last updated" date at the top of this page reflects the latest revision.</p>'),

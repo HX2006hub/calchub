@@ -30,9 +30,13 @@
     }
   }
 
+  // Unbiased integer in [0, maxExclusive) using rejection sampling over a
+  // 32-bit random value. Avoids modulo bias without introducing Math.random.
   function secureRandomInt(maxExclusive) {
+    if (maxExclusive <= 0) return 0;
     var buf = new Uint32Array(1);
-    crypto.getRandomValues(buf);
+    var limit = Math.floor(4294967296 / maxExclusive) * maxExclusive;
+    do { crypto.getRandomValues(buf); } while (buf[0] >= limit);
     return buf[0] % maxExclusive;
   }
 
@@ -331,8 +335,16 @@
         lastBlob = blob;
         var before = readOriginalSize();
         preview.src = URL.createObjectURL(blob);
-        info.innerHTML = 'Original: ' + fmtNum(before / 1024, 1) + ' KB &nbsp;•&nbsp; Compressed: <strong>' + fmtNum(blob.size / 1024, 1) + ' KB</strong> &nbsp;•&nbsp; ' + targetW + ' × ' + targetH + ' px';
-        setStatus('Compressed image ready. Check the preview, then download.', 'ok');
+        var saved = before - blob.size;
+        var pct = before > 0 ? Math.round((saved / before) * 100) : 0;
+        info.innerHTML = 'Original: ' + fmtNum(before / 1024, 1) + ' KB &nbsp;•&nbsp; Output: <strong>' + fmtNum(blob.size / 1024, 1) + ' KB</strong> &nbsp;•&nbsp; ' + targetW + ' × ' + targetH + ' px';
+        if (before > 0 && saved <= 0) {
+          info.innerHTML += '<br><strong style="color:var(--error)">Output is ' + fmtNum((blob.size - before) / 1024, 1) + ' KB larger than the original — not compressed. Try a lower quality or scale.</strong>';
+          setStatus('Output is larger than the original. This image may not benefit from JPEG re-encoding.', 'err');
+        } else {
+          info.innerHTML += '<br><span style="color:var(--success)">' + (pct > 0 ? pct + '% smaller than original.' : 'Same size as original.') + '</span>';
+          setStatus('Compressed image ready. Check the preview, then download.', 'ok');
+        }
       });
     }
 
@@ -584,8 +596,12 @@
     var labelB = $('[data-label-b]', root), labelA = $('[data-label-a]', root);
     function update() {
       var m = mode.value, av = parseFloat(a.value), bv = parseFloat(b.value);
-      if (isNaN(av) || isNaN(bv) || (m !== 'increase' && m !== 'decrease' && (av === 0 || bv === 0))) {
+      var needsBothNonZero = (m === 'percent-of' || m === 'is-what');
+      if (isNaN(av) || isNaN(bv) || av === 0 || (needsBothNonZero && bv === 0)) {
         out1.textContent = '—'; out2.textContent = '—'; out3.textContent = '—';
+        if (!isNaN(av) && av === 0 && (m === 'increase' || m === 'decrease')) {
+          out3.textContent = 'Original value must be greater than 0.';
+        }
         return;
       }
       if (m === 'percent-of') {
@@ -836,23 +852,17 @@
       if (syms.checked) groups.push(SYMBOLS);
       if (!groups.length) { output.value = 'Select at least one character type'; strength.textContent = ''; return; }
       var pool = groups.join('');
-      var arr = new Uint32Array(l);
-      crypto.getRandomValues(arr);
       var chars = [];
       // guarantee at least one char from each selected group
-      var used = {};
-      for (var g = 0; g < groups.length; g++) {
-        var gi = arr[g] % groups[g].length;
-        chars.push(groups[g].charAt(gi));
-        used[gi] = true;
+      for (var g = 0; g < groups.length && g < l; g++) {
+        chars.push(groups[g].charAt(secureRandomInt(groups[g].length)));
       }
-      for (var i = groups.length; i < l; i++) {
-        chars.push(pool.charAt(arr[i] % pool.length));
+      for (var i = chars.length; i < l; i++) {
+        chars.push(pool.charAt(secureRandomInt(pool.length)));
       }
-      // shuffle with crypto randomness
+      // unbiased Fisher-Yates shuffle with crypto randomness
       for (var j = chars.length - 1; j > 0; j--) {
-        var kbuf = new Uint32Array(1); crypto.getRandomValues(kbuf);
-        var k = kbuf[0] % (j + 1);
+        var k = secureRandomInt(j + 1);
         var tmp = chars[j]; chars[j] = chars[k]; chars[k] = tmp;
       }
       output.value = chars.join('');
@@ -935,12 +945,13 @@
         guard++;
         var r;
         if (dec > 0) {
-          r = lo + Math.random() * (hi - lo);
+          // Uniform, cryptographically secure float in [lo, hi], scaled to `dec` places.
+          var u = new Uint32Array(1); crypto.getRandomValues(u);
+          r = lo + (u[0] / 4294967296) * (hi - lo);
           r = parseFloat(r.toFixed(dec));
         } else {
-          var arr = new Uint32Array(1); crypto.getRandomValues(arr);
           var span = hi - lo + 1;
-          r = lo + (arr[0] % span);
+          r = lo + secureRandomInt(span);
         }
         if (needUnique) {
           var key = String(r);
