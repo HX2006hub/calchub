@@ -40,12 +40,78 @@ SITE_TAGLINE = 'Free Tools for Everyday Tasks'
 CONTACT_EMAIL = ''
 
 CATEGORIES = [
-    {'slug': 'text-tools',     'cat': 'text',  'name': 'Text Tools',            'icon': '✎', 'desc': 'Word counters, character counters, case converters, duplicate-line remover and lorem ipsum generator.'},
-    {'slug': 'image-tools',    'cat': 'image', 'name': 'Image & File Tools',     'icon': '🖼', 'desc': 'Compress, resize, convert, crop images and generate favicons entirely in your browser.'},
-    {'slug': 'calculators',    'cat': 'calc',  'name': 'Calculators',            'icon': '≡', 'desc': 'Percentage, age, date difference, unit, BMI and discount calculators with accurate formulas.'},
-    {'slug': 'generators',     'cat': 'gen',   'name': 'Generators & Converters','icon': '⚙', 'desc': 'Secure passwords, QR codes, UUIDs, random data, name picking and JSON formatting.'},
-    {'slug': 'time-tools',     'cat': 'time',  'name': 'Time & Productivity',    'icon': '⏱', 'desc': 'Countdown timer, stopwatch, Pomodoro timer and time zone converter with accurate timing.'},
-    {'slug': 'counters',       'cat': 'count', 'name': 'Counters & Trackers',    'icon': '⊕', 'desc': 'Simple, fast counters for tallying anything — clicks, attendees, reps and more.'},
+    {'slug': 'text-tools',     'cat': 'text',  'name': 'Text Tools',            'icon': '✎',
+     'desc': 'Count words and characters, estimate reading time, change capitalization, remove duplicate lines and generate placeholder text.',
+     'intro': [
+         'These tools deal with text as text: how long it is, how it is capitalised, and whether a list contains the same line twice. They are most useful when a form, a brief or a publishing platform imposes a limit or a format.',
+         'Everything here works on whatever you paste into the box. The text is not uploaded, so draft copy, customer lists and unpublished material can be checked without sending them anywhere.'
+     ],
+     'choosing': 'Use Word Counter when a limit is in words and Character Counter when it is in characters — the two answers often disagree. Reading Time turns a word count into an estimate. Text Case Converter changes formatting, Duplicate Line Remover cleans a list, and Lorem Ipsum Generator fills space in a layout that is still being designed.',
+     'usecases': [
+         'Checking an article against an 800-word brief before submitting it.',
+         'Finding out why a meta title was rejected by a character limit.',
+         'Removing repeated email addresses from a list pasted out of a spreadsheet.'
+     ]},
+    {'slug': 'image-tools',    'cat': 'image', 'name': 'Image & File Tools',     'icon': '🖼',
+     'desc': 'Compress, resize and crop images, convert between formats, or build a favicon — all in your browser.',
+     'intro': [
+         'A photo that is too large, in the wrong format or the wrong shape is a common blocker when uploading to a site or sending an attachment. These tools fix those problems one image at a time.',
+         'Each tool writes a fixed output format: the compressor produces JPEG, the resizer and cropper produce PNG, and the converters produce PNG or WebP. Choose by the file you need at the end, not only by the one you have now.'
+     ],
+     'choosing': 'Start with Image Compressor when size is the problem, Image Resizer when dimensions are, and Image Cropper when the framing is. Use the two converters when a site requires a particular format, and Favicon Generator when you need a small square site icon.',
+     'usecases': [
+         'Getting a phone photo under an upload limit before attaching it to a form.',
+         'Producing a 1200 x 630 preview image for a shared link.',
+         'Making a square avatar from a landscape photo.'
+     ]},
+    {'slug': 'calculators',    'cat': 'calc',  'name': 'Calculators',            'icon': '≡',
+     'desc': 'Work out percentages, ages, date spans, unit conversions, BMI and sale prices, with the formula shown alongside the answer.',
+     'intro': [
+         'These are the small calculations that turn up in everyday decisions: a discount, a deadline, a conversion between units, a figure on a form. Each tool asks for the values it needs and shows the working next to the result.',
+         'Where an answer depends on an assumption — an average month length, a standard BMI range, a single discount rather than stacked ones — the tool says so on its own page.'
+     ],
+     'choosing': 'Percentage Calculator covers the four common percentage questions; Discount Calculator adds a price and optional tax. Age Calculator gives calendar years, months and days, while Date Difference counts days between two dates. Unit Converter handles six measurement categories, and BMI Calculator reports an index with its limits clearly stated.',
+     'usecases': [
+         'Working out what a 25% discount actually costs before reaching the checkout.',
+         'Converting a measurement between US and metric units.',
+         'Checking the exact number of days between two dates on a contract.'
+     ]},
+    {'slug': 'generators',     'cat': 'gen',   'name': 'Generators & Converters','icon': '⚙',
+     'desc': 'Generate passwords, QR codes, random numbers and UUIDs, pick a name at random, or format and validate JSON.',
+     'intro': [
+         'Sometimes you need a value you cannot sensibly invent yourself: a password, an identifier, a random pick from a list, or a readable version of a JSON response. These tools produce one on demand.',
+         'Random tools here use the browser cryptographic random source rather than a predictable generator. That suits everyday use, though a generated identifier is still an identifier, not a secret or a credential.'
+     ],
+     'choosing': 'Use Password Generator for credentials and UUID Generator for identifiers — they solve different problems. Random Number Generator draws numbers in a range, Random Name Picker draws from a list, QR Code Generator encodes a link or short text into an image, and JSON Formatter checks and pretty-prints structured data.',
+     'usecases': [
+         'Creating a password for a new account and saving it in a password manager.',
+         'Generating a QR code for a menu link on a printed card.',
+         'Finding the syntax error in an API response that failed to parse.'
+     ]},
+    {'slug': 'time-tools',     'cat': 'time',  'name': 'Time & Productivity',    'icon': '⏱',
+     'desc': 'Countdown and focus timers, a stopwatch, and a time zone converter for scheduling across regions.',
+     'intro': [
+         'These tools are about when things happen: how long something has taken, how long is left, and what time it is somewhere else. They run in the tab you have open and need no account.',
+         'The timers read the clock rather than counting frames, so switching tabs does not make them lose time. None of them plays a sound — a finished phase is shown on the page.'
+     ],
+     'choosing': 'Use Countdown Timer when you know the duration in advance and Stopwatch when you want to measure elapsed time. Pomodoro Timer alternates focus and break blocks automatically, and Time Zone Converter compares a date and time between two IANA zones.',
+     'usecases': [
+         'Timing a presentation or a short break without an alarm going off in a meeting.',
+         'Measuring how long a recurring task actually takes.',
+         'Finding a meeting time that works between New York and London in July.'
+     ]},
+    {'slug': 'counters',       'cat': 'count', 'name': 'Counters & Trackers',    'icon': '⊕',
+     'desc': 'Two manual tallies: one with steps and keyboard shortcuts, one with a single large button.',
+     'intro': [
+         'A manual tally is still the right tool for counting people at a door, repetitions in a set or items in a stack. These two counters do that job without turning it into a spreadsheet.',
+         'They count only what you press. Neither tool tracks visits, clicks elsewhere on the site or any automatic activity.'
+     ],
+     'choosing': 'Online Counter gives you add and subtract buttons, an adjustable step and keyboard shortcuts — better when you are counting quickly or netting off removals. Click Counter is a single large button that adds one per press, which suits a touch screen or a repeated action. Both can optionally keep the count after a refresh.',
+     'usecases': [
+         'Counting attendees as they arrive, using the keyboard to keep your eyes up.',
+         'Tallying stock in packs by setting a step size.',
+         'Counting repetitions on a phone where a large target is easier to hit.'
+     ]},
 ]
 CAT_BY_ID = {c['cat']: c for c in CATEGORIES}
 
@@ -136,7 +202,7 @@ def footer_html(extra_scripts='', include_tools_js=True):
     return ('<footer class="site-footer">\n  <div class="container">\n'
             '    <div class="footer-grid">\n'
             '      <div class="footer-brand">\n' + logo_html(light=True) +
-            '        <p>Simple, fast and useful tools for work, creativity and everyday life. No signup, no setup — just tools that run in your browser.</p>\n'
+            '        <p>Thirty free browser tools for writing, images, calculations, generation, time and counting. No account required, and nothing you enter is uploaded.</p>\n'
             '      </div>\n'
             '      <div class="footer-col"><h4>Tools</h4>' + cats +
             '        <a href="/tools/">All Tools</a>\n      </div>\n'
@@ -869,14 +935,32 @@ def widget_html(t):
 
 # ---------------- Prose sections ----------------
 def prose_html(t):
-    howto = '<div class="prose"><h2>How to Use</h2><ol>' + ''.join('<li>' + esc(x) + '</li>' for x in t['howto']) + '</ol>'
+    """Editorial body for a tool page.
+
+    Content lives in _data/*.py; this function only arranges it. The
+    `understanding` and `limitations` fields are optional so short, simple
+    tools are not padded out with sections they do not need.
+    """
+    howto = '<h2>How to Use</h2><ol>' + ''.join('<li>' + esc(x) + '</li>' for x in t['howto']) + '</ol>'
     ex = '<h2>Practical Examples</h2><ul>' + ''.join('<li>' + esc(x) + '</li>' for x in t['examples']) + '</ul>'
-    feats = '<h2>Key Features</h2><ul>' + ''.join('<li>' + esc(x) + '</li>' for x in t['features']) + '</ul>'
+    understanding = ''
+    if t.get('understanding'):
+        understanding = ('<h2>Understanding the Result</h2>' +
+                         ''.join('<p>' + esc(x) + '</p>' for x in t['understanding']))
+    limitations = ''
+    if t.get('limitations'):
+        limitations = ('<h2>Limitations and Useful Notes</h2><ul>' +
+                       ''.join('<li>' + esc(x) + '</li>' for x in t['limitations']) + '</ul>')
+    # Legacy registries may still carry a `features` list. Render it only when
+    # present so a partial migration cannot break the build.
+    feats = ''
+    if t.get('features'):
+        feats = '<h2>Key Features</h2><ul>' + ''.join('<li>' + esc(x) + '</li>' for x in t['features']) + '</ul>'
     priv = '<div class="privacy-note"><strong>Privacy:</strong> ' + esc(t['privacy']) + '</div>'
-    faq = '<h2>Frequently Asked Questions</h2>'
+    faq = '<h2>Common Questions</h2>'
     for item in t['faq']:
         faq += ('<div class="faq-item"><h3>' + esc(item['q']) + '</h3><p>' + esc(item['a']) + '</p></div>')
-    return howto + ex + feats + priv + faq + '</div>'
+    return '<div class="prose">' + howto + ex + understanding + limitations + feats + priv + faq + '</div>'
 
 def side_panel_html(t):
     cat = CAT_BY_ID[t['cat']]
@@ -891,7 +975,7 @@ def side_panel_html(t):
             '<div class="side-box"><h3>Related Tools</h3><ul>' + related + '</ul></div>'
             '<div class="side-box"><h3>Category</h3><p>' + esc(cat['name']) + ' · ' + str(count) + ' tool' + ('s' if count != 1 else '') + '</p>'
             '<a class="btn btn-secondary" href="/category/' + cat['slug'] + '/">' + svg_icon('arrow-right', 16) + 'Browse category</a></div>'
-            '<div class="side-box"><h3>Explore More</h3><p>Browse every free tool in the library.</p>'
+            '<div class="side-box"><h3>Explore More</h3><p>See all 30 tools in one list.</p>'
             '<a class="btn btn-secondary" href="/tools/">' + svg_icon('arrow-right', 16) + 'All tools</a></div>'
             '</aside>')
 
@@ -950,14 +1034,14 @@ def hero_visual_html():
     return (
         '<div class="hero-visual" aria-hidden="true">'
         '<div class="hv-window">'
-        '<div class="hv-bar"><i></i><i></i><i></i><span>toolhub / dashboard</span></div>'
+        '<div class="hv-bar"><i></i><i></i><i></i><span>calchub / tools</span></div>'
         '<div class="hv-body">'
         '<div class="hv-tabs"><span class="on">Popular</span><span>Text</span><span>Images</span><span>Calculators</span><span>Generators</span></div>'
         + rows +
         '<div class="hv-result"><div><b>Result</b><strong>36.8% smaller</strong></div>' + svg_icon('check', 24) + '</div>'
         '</div></div>'
-        '<div class="hv-float one">' + svg_icon('shield', 16) + 'Private by design</div>'
-        '<div class="hv-float two">' + svg_icon('bolt', 16) + 'Fast &amp; free</div>'
+        '<div class="hv-float one">' + svg_icon('shield', 16) + 'Runs in your browser</div>'
+        '<div class="hv-float two">' + svg_icon('bolt', 16) + 'No signup needed</div>'
         '</div>')
 
 def quick_search_html():
@@ -966,7 +1050,7 @@ def quick_search_html():
         '<div class="hero-search">'
         '<div class="search-field">'
         + svg_icon('search', 20) +
-        '<input id="home-search" type="text" placeholder="Search for a tool..." aria-label="Search all tools" '
+        '<input id="home-search" type="text" placeholder="Search tools, e.g. image or timer" aria-label="Search all tools" '
         'autocomplete="off" role="combobox" aria-expanded="false" aria-controls="home-results">'
         '<button type="button" class="btn btn-primary" id="home-search-go">Search' + svg_icon('arrow-right', 16) + '</button>'
         '</div>'
@@ -975,9 +1059,9 @@ def quick_search_html():
 
 def value_props_html():
     items = [
-        ('shield', 'Private by Design', 'Your files and text are processed directly in your browser wherever supported. Nothing is uploaded.'),
-        ('bolt', 'Fast &amp; Simple', 'Open a tool and get things done without unnecessary steps, sign-ups or waiting.'),
-        ('gift', 'Free to Use', 'A growing collection of useful everyday tools, free for everyone and open to all.'),
+        ('shield', 'Your data stays on your device', 'Text, numbers and images are processed in the browser. We never receive them, so there is nothing to store or share.'),
+        ('bolt', 'No account, no setup', 'Open a tool and start using it. There is nothing to sign up for and no settings to configure first.'),
+        ('gift', 'Free to use', 'Every tool here is free. There is no paid tier, no trial and no registration wall.'),
     ]
     out = ''
     for ic, title, text in items:
@@ -1010,29 +1094,29 @@ def home_page():
 
             '<section class="hero"><div class="container hero-inner">'
             '<div class="hero-copy">'
-            '<span class="eyebrow">Free online tools</span>'
+            '<span class="eyebrow">30 free online tools</span>'
             '<h1>Free Tools for <span class="accent">Everyday Tasks.</span></h1>'
-            '<p class="hero-sub">Simple, fast and useful tools for work, creativity and everyday life.</p>'
-            '<p class="hero-note">No signup. No complicated setup. <strong>Just useful tools that work.</strong></p>'
+            '<p class="hero-sub">Count words, resize an image, work out a percentage, generate a password. Open a tool and use it — no account, no setup.</p>'
+            '<p class="hero-note">Your text and files are processed on your device. <strong>Nothing you enter is uploaded.</strong></p>'
             + quick_search_html() +
             '</div>'
             + hero_visual_html() +
             '</div></section>'
 
             '<section class="section"><div class="container">'
-            '<div class="section-head"><div><h2>Popular Tools</h2><p>The tools people reach for most.</p></div>'
+            '<div class="section-head"><div><h2>Popular Tools</h2><p>A few good places to start if you are not sure which tool you need.</p></div>'
             '<a class="head-link" href="/tools/">View all tools' + svg_icon('arrow-right', 16) + '</a></div>'
             '<div class="tool-grid">' + popular_cards + '</div>'
             '</div></section>'
 
             '<section class="section soft"><div class="container">'
-            '<div class="section-head"><div><h2>Tool Categories</h2><p>Six collections that cover everyday tasks. Pick one to explore.</p></div></div>'
+            '<div class="section-head"><div><h2>Tool Categories</h2><p>Grouped by the kind of job: writing, images, calculations, generation, time and counting.</p></div></div>'
             '<div class="cat-grid">' + cat_cards + '</div>'
             '<div class="cat-grid" style="margin-top:20px;grid-template-columns:repeat(2,minmax(0,1fr))">' + cat_minor + '</div>'
             '</div></section>'
 
             '<section class="section"><div class="container" id="all-tools">'
-            '<div class="section-head"><div><h2>All Tools</h2><p>Every CalcHub tool, ready to use. Filter by category or search by name.</p></div></div>'
+            '<div class="section-head"><div><h2>All Tools</h2><p>All 30 tools in one list. Filter by category or search by name to narrow it down.</p></div></div>'
             '<div class="filter-bar"><div class="filter-tabs">' + filter_tabs + '</div>'
             '<span class="filter-count" id="all-tools-count">' + str(len(TOOLS)) + ' tools</span></div>'
             '<div class="tool-grid" id="home-tool-list">' + all_cards + '</div>'
@@ -1040,18 +1124,18 @@ def home_page():
             '</div></section>'
 
             '<section class="section soft"><div class="container">'
-            '<div class="why-intro"><h2>Why CalcHub?</h2><p>A lightweight tool collection built around privacy, speed and simplicity.</p></div>'
+            '<div class="why-intro"><h2>Why CalcHub?</h2><p>A few things worth knowing before you use the tools.</p></div>'
             + value_props_html() +
             '<div class="why-links"><a href="/about/">Learn more about CalcHub</a> &nbsp;·&nbsp; <a href="/tools/">Browse all tools</a></div>'
             '</div></section>'
 
             '<section class="cta-band"><div class="container"><div class="cta-inner">'
-            '<div><h2>Ready to get something done?</h2><p>Pick a tool and start in seconds — no account, no downloads, no waiting.</p></div>'
+            '<div><h2>Find the tool you need</h2><p>Browse all 30, or search by the job you are trying to do. Everything runs in your browser.</p></div>'
             '<a class="btn btn-lg btn-primary" href="/tools/">Explore all ' + str(len(TOOLS)) + ' tools' + svg_icon('arrow-right', 17) + '</a>'
             '</div></section>'
             '</main>' + footer_html(include_tools_js=False))
     return head_html(SITE_NAME + ' — ' + SITE_TAGLINE,
-                     'Free online tools for everyday tasks: word counters, image tools, calculators, generators, timers and more. No signup required — everything runs in your browser.',
+                     'Thirty free tools for counting, converting, calculating, generating and timing. They run in your browser with no account, and nothing you enter is uploaded.',
                      SITE_URL + '/', ld) + body
 
 # ---------------- All tools directory ----------------
@@ -1068,15 +1152,15 @@ def tools_directory_html():
             '<main id="main"><section class="page-hero"><div class="container">'
             '<nav aria-label="Breadcrumb"><ol class="breadcrumb"><li><a href="/">Home</a></li><li aria-current="page">Tools</li></ol></nav>'
             '<h1>All CalcHub Tools</h1>'
-            '<p class="lead">Browse all 30 free online tools. Every tool runs locally in your browser with no signup required.</p>'
+            '<p class="lead">All 30 tools, grouped by what they do. Filter by name below, or open a category to see the tools inside it.</p>'
             '<div class="search-field" style="margin-top:24px;max-width:560px">' + svg_icon('search', 19) +
             '<input id="category-search" type="text" placeholder="Filter all tools by name..." aria-label="Filter tools">'
             '</div>'
             '</div></section>'
             '<div id="category-tool-list"><p class="result-sub search-count" style="margin-bottom:16px">30 tools</p>' + cat_sections + '</div>'
             '</main>' + footer_html(include_tools_js=False))
-    return head_html('All Free Online Tools | CalcHub',
-                     'Browse all 30 free online tools from CalcHub: text tools, image tools, calculators, generators, timers and counters. No signup, all in-browser.',
+    return head_html('All 30 Free Tools | CalcHub',
+                     'Browse all 30 CalcHub tools grouped by category: text, images, calculators, generators, time and counters. Free, browser-based, no account needed.',
                      SITE_URL + '/tools/', [
                          {'@context': 'https://schema.org', '@type': 'BreadcrumbList',
                           'itemListElement': [{'@type': 'ListItem', 'position': 1, 'name': 'Home', 'item': SITE_URL + '/'},
@@ -1088,6 +1172,15 @@ def category_page(c):
     tools = [t for t in TOOLS if t['cat'] == c['cat']]
     cards = ''.join(tool_card(t) for t in sorted(tools, key=lambda x: x['name'].lower()))
     canonical = SITE_URL + '/category/' + c['slug'] + '/'
+    names = ', '.join(t['name'] for t in sorted(tools, key=lambda x: x['name'].lower()))
+    guide = ('<div class="content-card"><div class="prose">'
+             '<h2>What belongs in this category</h2>'
+             + ''.join('<p>' + esc(x) + '</p>' for x in c['intro']) +
+             '<h2>Choosing the right tool</h2><p>' + esc(c['choosing']) + '</p>'
+             '<p class="cat-tool-list"><strong>Tools here:</strong> ' + esc(names) + '.</p>'
+             '<h2>Common situations</h2><ul>'
+             + ''.join('<li>' + esc(x) + '</li>' for x in c['usecases']) +
+             '</ul></div></div>')
     body = (header_html('/tools/') +
             '<main id="main"><section class="page-hero"><div class="container">'
             + breadcrumb_html([('Home', '/'), ('Tools', '/tools/'), (c['name'], None)]) +
@@ -1101,9 +1194,10 @@ def category_page(c):
             '<div class="tool-grid" id="category-tool-list">' + cards + '</div>'
             '<div class="filter-empty" id="category-empty"><strong>No tools found</strong>Try a different keyword.</div>'
             '</div></section>'
+            '<section class="section soft"><div class="container">' + guide + '</div></section>'
             '</main>' + footer_html(include_tools_js=False))
     return head_html(c['name'] + ' – Free Online Tools | CalcHub',
-                     c['desc'] + ' All tools are free, run in your browser and need no signup.',
+                     c['desc'],
                      canonical, [
                          {'@context': 'https://schema.org', '@type': 'BreadcrumbList',
                           'itemListElement': [{'@type': 'ListItem', 'position': 1, 'name': 'Home', 'item': SITE_URL + '/'},
@@ -1116,7 +1210,7 @@ def search_page():
     body = (header_html('') +
             '<main id="main"><section class="page-hero"><div class="container">'
             '<h1>Search Tools</h1>'
-            '<p class="lead">Find the free online tool you need. Search by name or keyword.</p>'
+            '<p class="lead">Search all 30 tools by name. Type a word like image, timer or password.</p>'
             '<div class="search-field" style="margin-top:24px;max-width:560px">' + svg_icon('search', 19) +
             '<input id="page-search" type="text" placeholder="e.g. password, image, timer..." aria-label="Search tools">'
             '</div></div></section>'
@@ -1127,7 +1221,7 @@ def search_page():
             '<p class="search-empty" style="display:none;grid-column:1/-1;color:var(--muted);text-align:center;padding:48px 0"><strong style="color:var(--ink-2);display:block;font-size:1.05rem;margin-bottom:4px">No tools found</strong>Try a different keyword.</p>'
             '</div></div></section></main>' + footer_html(include_tools_js=False))
     return head_html('Search Tools | CalcHub',
-                     'Search all CalcHub free online tools by name or keyword. Every tool is free and runs in your browser.',
+                     'Search the full list of 30 CalcHub tools by name. Everything runs in your browser and needs no account.',
                      SITE_URL + '/search/', None) + body
 
 # ---------------- 404 ----------------
@@ -1163,38 +1257,38 @@ def policy_pages():
     pages = []
     # About
     about_secs = [
-        ('What is CalcHub?', '<p>CalcHub is a free online tool platform with the simple goal of helping you get everyday tasks done quickly and privately. We publish a curated set of utilities for writing, images, calculations, generation, time management and counting.</p><p>All tools run as a static website. Pages are lightweight, load fast, and work on phones, tablets and desktops.</p>'),
-        ('What you will find', '<p>Six categories of tools:</p><ul><li><a href="/category/text-tools/">Text Tools</a> — word counts, character counts, case conversion, duplicate removal and placeholder text.</li><li><a href="/category/image-tools/">Image &amp; File Tools</a> — compress, resize, convert, crop and generate favicons.</li><li><a href="/category/calculators/">Calculators</a> — percentage, age, date difference, unit, BMI and discount calculators.</li><li><a href="/category/generators/">Generators &amp; Converters</a> — passwords, QR codes, UUIDs, random data and JSON tools.</li><li><a href="/category/time-tools/">Time &amp; Productivity</a> — countdown, stopwatch, Pomodoro and time zone tools.</li><li><a href="/category/counters/">Counters &amp; Trackers</a> — simple tally counters.</li></ul>'),
-        ('How we choose tools', '<p>We only publish tools that are genuinely useful, work without an account, and can run reliably in a standard browser. We describe features honestly: where a result is an estimate (such as reading time or BMI), the page says so. We do not invent usage statistics, reviews or performance claims.</p>'),
-        ('Privacy by design', '<p>Processing happens in your browser. Your text, numbers and files are not uploaded to us, so we have nothing to sell or lose. See the <a href="/privacy-policy/">Privacy Policy</a> for details.</p>'),
-        ('Contact', '<p>Questions or suggestions? Use the <a href="/contact/">Contact</a> page.</p>'),
+        ('What CalcHub is', '<p>CalcHub is a collection of 30 free tools for small, recurring jobs: counting words, checking a percentage, resizing an image, generating a password, or finding the time in another city. Each page contains one tool and a short explanation of how to use it.</p><p>There is no account to create and nothing to install. You open a tool, put in your text, numbers or file, and read the result.</p>'),
+        ('What you will find', '<p>The tools are grouped into six collections:</p><ul><li><a href="/category/text-tools/">Text Tools</a> — word and character counts, reading time, case conversion, duplicate-line removal and placeholder text.</li><li><a href="/category/image-tools/">Image &amp; File Tools</a> — compress, resize, crop, convert formats and generate a favicon.</li><li><a href="/category/calculators/">Calculators</a> — percentages, age, date difference, unit conversion, BMI and discounts.</li><li><a href="/category/generators/">Generators &amp; Converters</a> — passwords, QR codes, UUIDs, random values, name picking and JSON tools.</li><li><a href="/category/time-tools/">Time &amp; Productivity</a> — countdown, stopwatch, Pomodoro timer and time zone conversion.</li><li><a href="/category/counters/">Counters &amp; Trackers</a> — two simple manual tallies.</li></ul>'),
+        ('How the tools work', '<p>Processing happens in your browser. Text you paste, images you drop and numbers you enter are handled on your device using standard browser features, and are not sent to a server. Where a result depends on an assumption — an average reading speed, a standard BMI range, an average month length — the tool page says so.</p><p>The explanations on each page are written against what the tool actually does. If a timer has no sound, or a converter always outputs a particular format, that is stated rather than left for you to discover.</p>'),
+        ('Privacy', '<p>Because the tools process input locally, we do not receive what you enter. The only optional storage is in the counter tools, where a tickbox can keep a running number in your own browser. See the <a href="/privacy-policy/">Privacy Policy</a> for the details.</p>'),
+        ('Contact', '<p>Questions, corrections or suggestions? Use the <a href="/contact/">Contact</a> page.</p>'),
     ]
-    pages.append(('about', legal_page('about', 'About Us', 'Learn about CalcHub — a free online tool platform focused on privacy, speed and useful everyday utilities.', 'November 2026', about_secs)))
+    pages.append(('about', legal_page('about', 'About Us', 'What CalcHub is, what the 30 tools cover and how they handle your input.', 'November 2026', about_secs)))
 
     # Contact
     contact_secs = [
-        ('Get in touch', '<p>We welcome feedback, bug reports and tool suggestions.</p>'
+        ('Get in touch', '<p>If a tool gives a result you did not expect, a page is unclear, or you have a suggestion, we would like to hear about it.</p>'
          + ('<p><strong>Email:</strong> <a href="mailto:' + CONTACT_EMAIL + '">' + CONTACT_EMAIL + '</a></p>' if CONTACT_EMAIL else
-            '<p>This site is maintained by a small independent team. We do not publish a contact address here because no monitored inbox has been confirmed yet. If you are viewing this site through a hosted preview or repository, use that platform\u2019s issue tracker or feedback channel to reach the maintainers.</p>')
-         + '<p>Please do not send sensitive personal data through any channel.</p>'),
-        ('What to include', '<ul><li>Which tool or page you are writing about.</li><li>What you expected to happen.</li><li>What actually happened.</li><li>Your browser and device (if relevant).</li></ul>'),
-        ('Response times', '<p>This is a small independent project. We cannot guarantee a response to every message, but we read everything and prioritise issues that affect many users.</p>'),
+            '<p>CalcHub does not publish a contact email address, because no monitored inbox has been confirmed. If you are reading this on a hosted preview or in the project repository, use that platform\u2019s issue tracker or feedback channel to reach the maintainers.</p>')
+         + '<p>Please do not send passwords, personal data or confidential material through any channel.</p>'),
+        ('What to include', '<ul><li>Which tool or page you are writing about.</li><li>What you expected to happen and what happened instead.</li><li>Your browser and device, if the problem is visual or interactive.</li><li>For a calculation, the numbers you entered and the result you saw.</li></ul>'),
+        ('Response times', '<p>CalcHub is a small independent project with no formal support desk. We read feedback, but we cannot guarantee a reply to every message or a fix on any particular timeline.</p>'),
     ]
-    pages.append(('contact', legal_page('contact', 'Contact Us', 'Contact the CalcHub team with feedback, bug reports or suggestions.', 'November 2026', contact_secs)))
+    pages.append(('contact', legal_page('contact', 'Contact Us', 'Send feedback, a correction or a bug report about a CalcHub tool.', 'November 2026', contact_secs)))
 
     # Privacy
     privacy_secs = [
-        ('Introduction', '<p>This Privacy Policy explains how ' + SITE_NAME + ' handles information when you visit and use our website. We designed the site to minimise data collection: the tools themselves process your content in your browser and do not send it to our servers.</p>'),
-        ('Information we collect', '<p>We operate a static website with no user accounts and no database of visitors. We do not require you to provide a name, email address or any personal details to use any tool.</p><p>CalcHub itself does not collect or store visitor information. Your hosting provider may record standard technical data such as IP address and browser type as part of serving the pages; that is handled under the host\u2019s own policy, not by CalcHub.</p>'),
-        ('Cookies', '<p>We do not set cookies and we do not run advertising. The only browser storage we use is localStorage in the counter tools, and only if you tick the optional "Keep count after refresh" checkbox. That number stays on your device; unticking or clearing site data removes it.</p>'),
-        ('Analytics', '<p>We do not use Google Analytics, Cloudflare Analytics, or any other analytics service. We do not run advertising pixels or trackers, and we never log the content you type into a tool.</p>'),
+        ('Introduction', '<p>This Privacy Policy explains what happens to information when you use ' + SITE_NAME + '. The short version: the tools process your input in your browser, and we do not collect it.</p>'),
+        ('Information we collect', '<p>We operate a static website with no user accounts and no database of visitors. You do not need to provide a name, email address or any other personal details to use a tool.</p><p>CalcHub itself does not collect or store visitor information. The company hosting these pages may record standard technical data such as IP address and browser type while delivering them; that is handled under the host\u2019s own policy, not by CalcHub.</p>'),
+        ('Cookies and local storage', '<p>We do not set cookies and we do not run advertising. The only browser storage used is localStorage in the two counter tools, and only if you tick the optional "Keep count after refresh" checkbox. That number stays on your device; unticking the box or clearing site data removes it.</p>'),
+        ('Analytics', '<p>We do not use Google Analytics, Cloudflare Analytics or any other analytics service. We do not run advertising pixels or trackers, and we never log the content you type into a tool.</p>'),
         ('Local processing of tool data', '<p>All tool processing happens in your browser using standard Web APIs such as Canvas, File, Blob, Clipboard, Web Crypto and Intl. Your text, uploaded images and calculated values are not uploaded to our server, are not stored by us, and disappear when you close the page.</p>'),
-        ('Third-party services', '<p>We do not load third-party fonts, analytics or advertising scripts. The only bundled third-party code is the open-source QR Code generator library, which is served from this site itself and runs locally in your browser. Your hosting provider delivers the static pages under its own privacy policy.</p>'),
-        ('Data security', '<p>Because we do not collect or store tool inputs, there is little personal data for us to protect. Standard security measures (HTTPS, updated dependencies) are used to keep the site itself safe.</p>'),
-        ('Your rights', '<p>Depending on your location (for example, under the GDPR or CCPA), you may have rights to access, correct or delete personal data. Since we do not collect tool inputs or account data, there is generally nothing to access or delete. To raise a privacy question, contact us via the <a href="/contact/">Contact</a> page.</p>'),
-        ('Changes to this policy', '<p>We may update this policy when the site or law changes. The "Last updated" date at the top of this page reflects the latest revision.</p>'),
+        ('Third-party services', '<p>We do not load third-party fonts, analytics or advertising scripts. The only bundled third-party code is the open-source QR code generator library, which is served from this site itself and runs locally in your browser. Your hosting provider delivers the static pages under its own privacy policy.</p>'),
+        ('Data security', '<p>Because we do not collect tool inputs or account data, there is little personal data for us to protect. The pages are served over HTTPS by the hosting provider.</p>'),
+        ('Your rights', '<p>Depending on where you live (for example, under the GDPR or CCPA), you may have rights to access, correct or delete personal data. Since we do not collect tool inputs or account data, there is generally nothing to access or delete. To raise a privacy question, use the <a href="/contact/">Contact</a> page.</p>'),
+        ('Changes to this policy', '<p>We may update this policy when the site or the law changes. The "Last updated" date at the top of this page reflects the latest revision.</p>'),
     ]
-    pages.append(('privacy-policy', legal_page('privacy-policy', 'Privacy Policy', 'How CalcHub protects your privacy: tools run in your browser, no accounts, minimal data collection and clear disclosure of cookies and analytics.', 'November 2026', privacy_secs)))
+    pages.append(('privacy-policy', legal_page('privacy-policy', 'Privacy Policy', 'How CalcHub handles your information: tools run in your browser, no accounts, no analytics and a clear note on local storage.', 'November 2026', privacy_secs)))
 
     # Terms
     terms_secs = [
@@ -1207,12 +1301,12 @@ def policy_pages():
         ('Governing law', '<p>These terms are governed by the laws applicable to the site operator\u2019s jurisdiction. If a court finds any part of these terms unenforceable, the rest remains in effect.</p>'),
         ('Contact', '<p>Questions about these terms? <a href="/contact/">Contact us</a>.</p>'),
     ]
-    pages.append(('terms', legal_page('terms', 'Terms of Use', 'The terms that apply when you use CalcHub free online tools, including disclaimers on results and the no-warranty section.', 'November 2026', terms_secs)))
+    pages.append(('terms', legal_page('terms', 'Terms of Use', 'The terms that apply when you use CalcHub, including disclaimers on results and the no-warranty section.', 'November 2026', terms_secs)))
 
     # Disclaimer
     disc_secs = [
         ('General information only', '<p>The tools and content on ' + SITE_NAME + ' are provided for general informational and utility purposes. They are not professional advice.</p>'),
-        ('Calculations and estimates', '<p>Results from calculators, converters, timers and other tools are based on common formulas and are provided for convenience. Acceptable for most everyday uses, they may not suit professional, legal, medical or financial decisions. For example, BMI is a screening measure and not a medical diagnosis, and reading time is an estimate based on an average reading speed.</p>'),
+        ('Calculations and estimates', '<p>Results from calculators, converters, timers and other tools are based on common formulas and are provided for convenience. They may not suit professional, legal, medical or financial decisions. For example, BMI is a screening measure and not a medical diagnosis, and reading time is an estimate based on an assumed reading speed.</p>'),
         ('No professional relationship', '<p>Using a tool does not create a professional relationship with the operators of this site. For medical, legal, tax or investment decisions, consult a qualified professional.</p>'),
         ('External links', '<p>Pages may link to external websites. We are not responsible for the content, accuracy or practices of third-party sites.</p>'),
         ('Limitation of liability', '<p>To the maximum extent permitted by law, ' + SITE_NAME + ' disclaims liability for any loss or damage caused by reliance on information obtained from this site or by use of its tools.</p>'),
